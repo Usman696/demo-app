@@ -13,6 +13,19 @@ pipeline {
                 checkout scm
             }
         }
+        
+        stage('Tests') {
+            steps {
+                sh '''
+                    python3 -m venv venv
+                    . venv/bin/activate
+
+                    pip install -r requirements.txt
+
+                    pytest -v
+                '''
+            }
+        }
 
         stage('Build image') {
             steps {
@@ -21,7 +34,7 @@ pipeline {
                 '''
             }
         }
-
+   
         stage('Docker login') {
             steps {
                 sh '''

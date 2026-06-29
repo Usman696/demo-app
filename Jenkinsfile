@@ -15,17 +15,16 @@ pipeline {
         }
         
         stage('Tests') {
-            steps {
-                sh '''
-                    python3 -m venv venv
-                    . venv/bin/activate
-
-                    pip install -r requirements.txt
-
-                    pytest -v
-                '''
-            }
-        }
+       	   steps {
+        	sh '''
+                    docker run --rm \
+             	      -v "$PWD":/app \
+             	      -w /app \
+             	      python:3.12-slim \
+              	      sh -c "pip install -r requirements.txt && pytest -v"
+        	'''
+    	    }
+	}
 
         stage('Build image') {
             steps {
